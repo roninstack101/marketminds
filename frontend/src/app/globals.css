@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-display: var(--font-playfair);
+  --font-sans: var(--font-inter);
+
+  --color-gold: var(--gold-primary);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dim: var(--gold-dim);
+}
+
+/* ── Light theme (default) ── */
+:root {
+  color-scheme: light;
+  --bg: #F3EFE6;
+  --bg-alt: #EBE5D8;
+  --surface: #FFFFFF;
+  --surface-deep: #E8E1D3;
+  --input-bg: #EBE5D8;
+  --border: #D6CBB8;
+  --text: #0A0A0A;
+  --text-2: #4A4A4A;
+  --text-3: #7A7A7A;
+  --text-4: #C0B8AA;
+  --dot-matrix-color: rgba(140, 107, 18, 0.75); /* Deeper bronze-gold at high alpha to prevent blending */
+  --spotlight-color: rgba(168, 130, 22, 0.65); /* Rich gold glow highlight */
+  --spotlight-filter: drop-shadow(0 0 12px rgba(201, 162, 39, 0.35)) drop-shadow(0 0 4px rgba(201, 162, 39, 0.2));
+  --card-border: rgba(201, 162, 39, 0.55);
+  --card-shadow: 0 0 40px rgba(201, 162, 39, 0.35), 0 12px 30px rgba(138, 111, 26, 0.1);
+  --gold-primary: #A88216; /* Beautiful, deep contrast metallic gold */
+  --gold-light: #C49F2D; /* Vibrant medium gold */
+  --gold-dim: #7E6110; /* Rich bronze-gold */
+}
+
+/* ── Dark theme ── */
+.dark {
+  color-scheme: dark;
+  --bg: #0A0A0A;
+  --bg-alt: #111111;
+  --surface: #161616;
+  --surface-deep: #0A0A0A;
+  --input-bg: #1C1C1C;
+  --border: #2A2A2A;
+  --text: #F2F2F2;
+  --text-2: #C0C0C0;
+  --text-3: #909090;
+  --text-4: #606060;
+  --dot-matrix-color: rgba(201, 162, 39, 0.15); /* Vibrant original neon gold at lower alpha */
+  --spotlight-color: rgba(201, 162, 39, 0.85); /* Rich glowing neon gold spotlight */
+  --spotlight-filter: drop-shadow(0 0 6px #C9A227) drop-shadow(0 0 2px #C9A227);
+  --card-border: rgba(201, 162, 39, 0.3);
+  --card-shadow: 0 0 50px rgba(201, 162, 39, 0.18);
+  --gold-primary: #C9A227; /* Luminous original neon gold */
+  --gold-light: #E8C65A; /* Glowing gold-light */
+  --gold-dim: #8A6F1A; /* Dim neon gold */
+}
+
+/* Premium Floating Card Class for Auth */
+.premium-card {
+  border: 1px solid var(--border);
+}
+@media (min-width: 1024px) {
+  .premium-card {
+    border: 1px solid var(--card-border) !important;
+    box-shadow: var(--card-shadow) !important;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Display font utility */
+.font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* Gradient text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-light) 50%, var(--gold-primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-primary); }
+
+/* Gold divider line */
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+}
+
+/* Hero entrance animations */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes heroFadeScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: none; }
+}
+
+.animate-hero {
+  opacity: 0;
+  animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-hero-scale {
+  opacity: 0;
+  animation: heroFadeScale 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero, .animate-hero-scale { animation: none; opacity: 1; }
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee { animation: none; }
+}
+
+/* Hide scrollbar (horizontal scroll sections) */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
