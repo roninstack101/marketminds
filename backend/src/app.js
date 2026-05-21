@@ -15,16 +15,8 @@ const { getComputedGains } = require("./controllers/dashboard.controller");
 
 const app = express();
 
-const corsOptions = {
-  origin: (process.env.CLIENT_ORIGIN || "*").replace(/\/$/, ""),
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
 app.use(helmet());
-app.options("*", cors(corsOptions));
-app.use(cors(corsOptions));
+app.use(cors({ origin: process.env.CLIENT_ORIGIN || "*", credentials: true }));
 app.use(express.json({ limit: "5mb" }));
 
 // Global rate limit — 100 requests per 15 min per IP
