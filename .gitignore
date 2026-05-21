@@ -3,6 +3,7 @@ node_modules/
 .pnp
 .pnp.js
 
+
 # ── Environment variables (NEVER commit secrets) ──────────────────
 .env
 .env.local
