@@ -8,10 +8,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./frontend
-      args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    image: yasshhh01/marketminds-frontend:latest
     ports:
       - "3000:3000"
     depends_on:
