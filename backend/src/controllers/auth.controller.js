@@ -3,7 +3,7 @@ const { validationResult } = require("express-validator");
 const User = require("../models/User");
 const OTP = require("../models/OTP");
 const { generateOTP, otpExpiryDate } = require("../utils/otp.util");
-const { sendOTPEmail } = require("../utils/email.util");
+const { sendOTPEmail, sendPasswordResetEmail } = require("../utils/email.util");
 
 function signToken(id) {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "7d" });
@@ -130,4 +130,46 @@ async function login(req, res) {
   }
 }
 
-module.exports = { register, verifyOTP, resendOTP, login };
+// POST /api/auth/forgot-password
+async function forgotPassword(req, res) {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email: email.toLowerCase() });
+    // Always respond the same way to avoid user enumeration
+    if (!user || !user.isVerified) {
+      return res.json({ success: true, message: "If that email is registered, an OTP has been sent." });
+    }
+    const otp = generateOTP();
+    await OTP.deleteMany({ email: email.toLowerCase(), purpose: "reset" });
+    await OTP.create({ email: email.toLowerCase(), otp, expiresAt: otpExpiryDate(), purpose: "reset" });
+    await sendPasswordResetEmail(email, user.name, otp);
+    res.json({ success: true, message: "OTP sent to your email." });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
+
+// POST /api/auth/reset-password
+async function resetPassword(req, res) {
+  const { email, otp, password } = req.body;
+  try {
+    const record = await OTP.findOne({ email: email.toLowerCase(), purpose: "reset", isUsed: false });
+    if (!record) return res.status(400).json({ success: false, message: "No active OTP found. Please request a new one." });
+    if (new Date() > record.expiresAt) return res.status(400).json({ success: false, message: "OTP has expired. Please request a new one." });
+    if (record.otp !== otp) return res.status(400).json({ success: false, message: "Invalid OTP." });
+
+    record.isUsed = true;
+    await record.save();
+
+    const user = await User.findOne({ email: email.toLowerCase() }).select("+password");
+    if (!user) return res.status(404).json({ success: false, message: "User not found." });
+    user.password = password;
+    await user.save();
+
+    res.json({ success: true, message: "Password reset successfully. You can now sign in." });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+}
+
+module.exports = { register, verifyOTP, resendOTP, login, forgotPassword, resetPassword };

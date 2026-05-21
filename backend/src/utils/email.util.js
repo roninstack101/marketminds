@@ -72,6 +72,28 @@ async function sendOTPEmail(to, name, otp) {
   });
 }
 
+async function sendPasswordResetEmail(to, name, otp) {
+  const minutes = process.env.OTP_EXPIRES_MINUTES || "10";
+  await transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to,
+    subject: "Reset Your MarketMinds Password",
+    html: shell(`
+      <p style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#666;margin:0 0 20px;">Password Reset</p>
+      <p style="font-size:15px;color:#fff;margin:0 0 8px;">Hi <strong>${name}</strong>,</p>
+      <p style="font-size:13px;color:#aaa;margin:0 0 24px;">Use the OTP below to reset your password. It expires in <strong style="color:#fff;">${minutes} minutes</strong>.</p>
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="center" style="background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:24px;">
+            <span style="font-size:38px;font-weight:700;letter-spacing:14px;color:#C9A227;">${otp}</span>
+          </td>
+        </tr>
+      </table>
+      <p style="font-size:12px;color:#555;margin:20px 0 0;">If you did not request a password reset, please ignore this email. Your password will remain unchanged.</p>
+    `),
+  });
+}
+
 async function sendKYCApprovedEmail(to, name) {
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
@@ -193,6 +215,7 @@ async function sendProfitCreditedEmail(to, name, amount, note) {
 
 module.exports = {
   sendOTPEmail,
+  sendPasswordResetEmail,
   sendKYCApprovedEmail,
   sendKYCRejectedEmail,
   sendPurchaseApprovedEmail,
