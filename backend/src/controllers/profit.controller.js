@@ -31,9 +31,10 @@ async function distributeProfit(req, res) {
       status: "completed",
     });
 
-    await sendProfitCreditedEmail(user.email, user.name, amount, note);
-
     res.status(201).json({ success: true, transaction });
+
+    // Send email after responding so it never blocks the request
+    sendProfitCreditedEmail(user.email, user.name, amount, note).catch(console.error);
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -67,11 +68,11 @@ async function bulkDistributeProfit(req, res) {
       }))
     );
 
-    await Promise.allSettled(
-      users.map((u) => sendProfitCreditedEmail(u.email, u.name, amount, note))
-    );
-
     res.status(201).json({ success: true, count: transactions.length });
+
+    Promise.allSettled(
+      users.map((u) => sendProfitCreditedEmail(u.email, u.name, amount, note))
+    ).catch(console.error);
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
