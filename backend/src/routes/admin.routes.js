@@ -9,6 +9,8 @@ const {
   addTransaction,
   getAllUsers,
   updateUser,
+  createUser,
+  deleteUser,
 } = require("../controllers/admin.controller");
 const { adminGetKYCRequests, adminReviewKYC } = require("../controllers/kyc.controller");
 const { adminGetAllPlans, createPlan, updatePlan, deletePlan } = require("../controllers/plan.controller");
@@ -42,6 +44,13 @@ router.post("/transactions", [
 
 // User management
 router.get("/users", getAllUsers);
+router.post("/users", [
+  body("name").trim().notEmpty().withMessage("Name is required"),
+  body("email").isEmail().withMessage("Valid email is required"),
+  body("phone").trim().matches(/^[6-9]\d{9}$/).withMessage("Valid 10-digit phone required"),
+  body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
+  body("role").optional().isIn(["user", "admin"]),
+], createUser);
 router.patch("/users/:id", [
   param("id").isMongoId().withMessage("Valid user ID required"),
   body("name").optional().trim().notEmpty().isLength({ max: 80 }),
@@ -49,6 +58,9 @@ router.patch("/users/:id", [
   body("role").optional().isIn(["user", "admin"]).withMessage("Role must be user or admin"),
   body("isVerified").optional().isBoolean(),
 ], updateUser);
+router.delete("/users/:id", [
+  param("id").isMongoId().withMessage("Valid user ID required"),
+], deleteUser);
 
 // KYC
 router.get("/kyc", adminGetKYCRequests);

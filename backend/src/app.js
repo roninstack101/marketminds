@@ -16,7 +16,16 @@ const { getComputedGains } = require("./controllers/dashboard.controller");
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "*", credentials: true }));
+
+const corsOptions = {
+  origin: (process.env.CLIENT_ORIGIN || "").replace(/\/$/, "") || "*",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.options("*", cors(corsOptions));
+app.use(cors(corsOptions));
+
 app.use(express.json({ limit: "5mb" }));
 
 // Global rate limit — 100 requests per 15 min per IP
@@ -45,7 +54,11 @@ app.use((_, res) => res.status(404).json({ success: false, message: "Route not f
 // Global error handler
 app.use((err, _req, res, _next) => {
   console.error(err.stack);
-  res.status(err.statusCode || 500).json({ success: false, message: err.message || "Internal server error" });
+  const isProd = process.env.NODE_ENV === "production";
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: isProd ? "Internal server error" : (err.message || "Internal server error"),
+  });
 });
 
 module.exports = app;

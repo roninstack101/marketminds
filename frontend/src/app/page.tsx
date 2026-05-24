@@ -31,11 +31,11 @@ const mediaLogos = [
 ];
 
 const investorReturns = [
-  { investor: "Priya S.", city: "Pune", invested: "₹1,000/mo", duration: "4 Years", value: "₹82,400", gain: "+71.6%" },
-  { investor: "Ramesh I.", city: "Chennai", invested: "₹5,000/mo", duration: "3 Years", value: "₹2.34L", gain: "+30.0%" },
-  { investor: "Anita K.", city: "Jaipur", invested: "₹2,500/mo", duration: "5 Years", value: "₹2.91L", gain: "+94.0%" },
-  { investor: "Deepak M.", city: "Hyderabad", invested: "₹500/mo", duration: "6 Years", value: "₹72,800", gain: "+102.2%" },
-  { investor: "Kavya R.", city: "Bengaluru", invested: "₹10,000/mo", duration: "2 Years", value: "₹3.14L", gain: "+30.8%" },
+  { investor: "Priya S.", city: "Pune", invested: "₹50,000", duration: "4 Years", value: "₹82,400", gain: "+71.6%" },
+  { investor: "Ramesh I.", city: "Chennai", invested: "₹1,00,000", duration: "3 Years", value: "₹2.34L", gain: "+30.0%" },
+  { investor: "Anita K.", city: "Jaipur", invested: "₹50,000", duration: "5 Years", value: "₹2.91L", gain: "+94.0%" },
+  { investor: "Deepak M.", city: "Hyderabad", invested: "₹50,000", duration: "6 Years", value: "₹72,800", gain: "+102.2%" },
+  { investor: "Kavya R.", city: "Bengaluru", invested: "₹1,00,000", duration: "2 Years", value: "₹3.14L", gain: "+30.8%" },
 ];
 
 export default function HomePage() {
@@ -149,8 +149,8 @@ export default function HomePage() {
       <section className="border-b border-[var(--border)] py-10 sm:py-14 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:flex md:flex-row">
           {[
-            { val: "₹85Cr+", label: "Capital Deployed" },
-            { val: "1,200+",   label: "Active Partners" },
+            { val: "₹35L+", label: "Capital Deployed" },
+            { val: "100+",   label: "Active Partners" },
             { val: "42.5%",  label: "Avg. Annual Returns" },
             { val: "5 Yrs",  label: "In Private Markets" },
           ].map((s, i) => (
@@ -330,9 +330,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── INVESTOR RETURNS (HORIZONTAL SCROLL) ── */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto">
+      {/* ── INVESTOR RETURNS (AUTO SCROLL) ── */}
+      <section className="py-16 sm:py-20 md:py-24 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <AnimatedSection className="mb-8 sm:mb-10">
             <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-2)] mb-3 sm:mb-4">Real Returns</p>
             <div className="flex items-end justify-between">
@@ -347,10 +347,17 @@ export default function HomePage() {
               </Link>
             </div>
           </AnimatedSection>
+        </div>
 
-          <div className="flex gap-4 sm:gap-5 overflow-x-auto scrollbar-hide pb-10 pt-4 -mx-4 sm:-mx-6 px-4 sm:px-6">
-            {investorReturns.map((r, i) => (
-              <TiltCard key={i} className="flex-shrink-0 w-[220px] sm:w-[260px]">
+        <div className="relative">
+          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none bg-gradient-to-r from-[var(--bg)] to-transparent" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none bg-gradient-to-l from-[var(--bg)] to-transparent" />
+          <div
+            className="animate-marquee flex gap-4 sm:gap-5 pb-4 pt-4"
+            style={{ width: "max-content" }}
+          >
+            {[...investorReturns, ...investorReturns].map((r, i) => (
+              <div key={i} className="flex-shrink-0 w-[220px] sm:w-[260px]">
                 <div className="h-full bg-[var(--surface)] border border-[var(--border)] rounded-[20px] sm:rounded-[24px] p-5 sm:p-7 shadow-xl shadow-black/5">
                   <div className="flex items-center justify-between mb-5 sm:mb-6">
                     <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#C9A227]/10 border border-[#C9A227]/20 flex items-center justify-center text-[#C9A227] text-xs font-bold">
@@ -378,7 +385,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-              </TiltCard>
+              </div>
             ))}
           </div>
         </div>
@@ -453,37 +460,51 @@ export default function HomePage() {
       </section>
 
       {/* ── TESTIMONIALS ── */}
-      <section className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 bg-[var(--bg-alt)]">
-        <div className="max-w-6xl mx-auto">
-          <AnimatedSection className="text-center mb-10 sm:mb-14">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-2)]">Investor Stories</p>
-          </AnimatedSection>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
-            {[
-              { quote: "Started with ₹1,000/month. Portfolio is now ₹4.2 lakhs. MarketMinds changed how I think about money.", name: "Priya Sharma", loc: "Pune", tag: "Monthly Investor · 4 Years" },
-              { quote: "The dashboard is the clearest I've seen. I know exactly where every rupee is. That's rare in this industry.", name: "Ramesh Iyer", loc: "Chennai", tag: "Growth Fund" },
-              { quote: "Their Growth fund significantly improved my portfolio last year. First time investing has actually felt worth it.", name: "Anita Kapoor", loc: "Jaipur", tag: "Growth Investor" },
-            ].map((t, i) => (
-              <AnimatedSection key={t.name} delay={i * 120} direction="up">
-                <div className="bg-[var(--surface)] border border-[var(--border)] hover:border-[#C9A227]/20 rounded-[20px] sm:rounded-[24px] p-6 sm:p-8 min-h-[18rem] sm:h-[22rem] flex flex-col justify-between transition-all duration-500">
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-[#C9A227] mb-4 sm:mb-6">{t.tag}</p>
-                    <p className="text-[var(--text)] text-sm sm:text-base leading-relaxed font-light">&ldquo;{t.quote}&rdquo;</p>
-                  </div>
-                  <div className="flex items-center gap-3 pt-5 sm:pt-6 border-t border-[var(--border)] mt-5 sm:mt-0">
-                    <div className="w-8 h-8 rounded-full bg-[#C9A227]/10 border border-[#C9A227]/20 flex items-center justify-center text-[#C9A227] text-xs font-bold flex-shrink-0">
-                      {t.name[0]}
-                    </div>
+      <section className="py-16 sm:py-20 md:py-24 bg-[var(--bg-alt)] overflow-hidden">
+        <AnimatedSection className="text-center mb-10 sm:mb-14 px-4 sm:px-6">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-2)]">Investor Stories</p>
+        </AnimatedSection>
+        {(() => {
+          const testimonials = [
+            { quote: "Made a one-time investment of ₹50,000. Portfolio is now ₹4.2 lakhs. MarketMinds changed how I think about money.", name: "Priya Sharma", loc: "Pune", tag: "One-Time Investor · 4 Years" },
+            { quote: "The dashboard is the clearest I've seen. I know exactly where every rupee is. That's rare in this industry.", name: "Ramesh Iyer", loc: "Chennai", tag: "Growth Fund" },
+            { quote: "Their Growth fund significantly improved my portfolio last year. First time investing has actually felt worth it.", name: "Anita Kapoor", loc: "Jaipur", tag: "Growth Investor" },
+            { quote: "Invested ₹1,00,000 as a one-time commitment. The returns have been consistent and transparent every step of the way.", name: "Deepak Mehta", loc: "Hyderabad", tag: "One-Time Investor · 2 Years" },
+            { quote: "I was skeptical at first, but the algo-driven approach genuinely works. My corpus has grown beyond expectations.", name: "Sunita Rao", loc: "Bengaluru", tag: "Growth Investor" },
+          ];
+          const doubled = [...testimonials, ...testimonials];
+          return (
+            <div className="relative">
+              <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none bg-gradient-to-r from-[var(--bg-alt)] to-transparent" />
+              <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-32 z-10 pointer-events-none bg-gradient-to-l from-[var(--bg-alt)] to-transparent" />
+              <div
+                className="animate-marquee flex gap-5"
+                style={{ width: "max-content" }}
+              >
+                {doubled.map((t, i) => (
+                  <div
+                    key={i}
+                    className="w-[280px] sm:w-[340px] flex-shrink-0 bg-[var(--surface)] border border-[var(--border)] hover:border-[#C9A227]/20 rounded-[20px] sm:rounded-[24px] p-6 sm:p-8 h-[22rem] flex flex-col justify-between transition-all duration-500"
+                  >
                     <div>
-                      <p className="text-[var(--text)] text-xs font-semibold">{t.name}</p>
-                      <p className="text-[var(--text-3)] text-[10px] uppercase tracking-wider">{t.loc}</p>
+                      <p className="text-[10px] uppercase tracking-widest text-[#C9A227] mb-4 sm:mb-6">{t.tag}</p>
+                      <p className="text-[var(--text)] text-sm leading-relaxed font-light">&ldquo;{t.quote}&rdquo;</p>
+                    </div>
+                    <div className="flex items-center gap-3 pt-5 border-t border-[var(--border)]">
+                      <div className="w-8 h-8 rounded-full bg-[#C9A227]/10 border border-[#C9A227]/20 flex items-center justify-center text-[#C9A227] text-xs font-bold flex-shrink-0">
+                        {t.name[0]}
+                      </div>
+                      <div>
+                        <p className="text-[var(--text)] text-xs font-semibold">{t.name}</p>
+                        <p className="text-[var(--text-3)] text-[10px] uppercase tracking-wider">{t.loc}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </AnimatedSection>
-            ))}
-          </div>
-        </div>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
       </section>
 
       {/* ── CTA BLOCK ── */}

@@ -558,22 +558,18 @@ export default function DashboardPage() {
                         <thead><tr className="border-b border-[var(--border)]">
                           <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium hidden sm:table-cell">#</th>
                           <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium">Member</th>
-                          <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium">Invested</th>
                           <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium">Return</th>
-                          <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium hidden sm:table-cell">Current Value</th>
                           <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium hidden sm:table-cell">Total Return</th>
-                          <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium hidden sm:table-cell">This Month</th>
+                          <th className="px-4 sm:px-6 py-3 text-left text-[9px] uppercase tracking-[0.2em] text-[var(--text-3)] font-medium">Monthly Return</th>
                         </tr></thead>
                         <tbody>
                           {(memberGains.length > 0 ? memberGains : STATIC_GAINS).slice(0, 10).map((row, i) => (
                             <tr key={row._id} className="border-b border-[var(--border)]/40 hover:bg-[var(--bg)] transition-colors">
                               <td className="px-4 sm:px-6 py-3.5 text-[var(--text-3)] text-xs w-8 hidden sm:table-cell">{i + 1}</td>
                               <td className="px-4 sm:px-6 py-3.5 text-[var(--text)] text-sm font-semibold">{row.memberName}</td>
-                              <td className="px-4 sm:px-6 py-3.5 text-[var(--text-2)] text-sm">{fmtINR(row.invested)}</td>
                               <td className="px-4 sm:px-6 py-3.5"><span className="text-emerald-500 text-sm font-bold">+{fmtINR(row.currentValue - row.invested)}</span></td>
-                              <td className="px-4 sm:px-6 py-3.5 text-[var(--text)] text-sm font-medium hidden sm:table-cell">{fmtINR(row.currentValue)}</td>
                               <td className="px-4 sm:px-6 py-3.5 hidden sm:table-cell"><span className="text-[#C9A227] text-sm font-bold">+{safeFixed(row.totalReturnPct, 1)}%</span></td>
-                              <td className="px-4 sm:px-6 py-3.5 hidden sm:table-cell"><span className={`text-sm font-bold ${(row.monthlyReturnPct ?? 0) >= 0 ? "text-emerald-500" : "text-red-400"}`}>{(row.monthlyReturnPct ?? 0) >= 0 ? "+" : ""}{safeFixed(row.monthlyReturnPct)}%</span></td>
+                              <td className="px-4 sm:px-6 py-3.5"><span className={`text-sm font-bold ${(row.monthlyReturnPct ?? 0) >= 0 ? "text-emerald-500" : "text-red-400"}`}>{(row.monthlyReturnPct ?? 0) >= 0 ? "+" : ""}{safeFixed(row.monthlyReturnPct)}%</span></td>
                             </tr>
                           ))}
                         </tbody>

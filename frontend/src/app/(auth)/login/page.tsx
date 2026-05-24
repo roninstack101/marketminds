@@ -40,9 +40,9 @@ function FloatingParticles() {
 
 /* ── Left panel stats ──────────────────────────────────────────── */
 const STATS = [
-  { value: "₹85Cr+", label: "Capital Deployed" },
+  { value: "₹35L+", label: "Capital Deployed" },
   { value: "42.5%", label: "Avg Annual Return" },
-  { value: "1,200+", label: "Active Partners" },
+  { value: "100+", label: "Active Partners" },
 ];
 
 const FEATURES = [

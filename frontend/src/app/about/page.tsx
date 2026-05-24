@@ -7,17 +7,14 @@ import AnimatedSection from "@/components/AnimatedSection";
 import AnimatedCounter from "@/components/AnimatedCounter";
 
 const team = [
-  { name: "Vikram Mehta", role: "Founder & CEO", bio: "15 years in algorithmic trading. Built MarketMinds to give select individuals access to high-velocity algorithms.", initials: "VM" },
-  { name: "Sneha Patel", role: "Chief Investment Officer", bio: "Quant specialist. Expert in high-frequency systems and risk-adjusted absolute returns.", initials: "SP" },
-  { name: "Arjun Nair", role: "Head of Technology", bio: "Built proprietary trading infrastructure for institutional desks. Makes complex finance execute perfectly.", initials: "AN" },
-  { name: "Meera Joshi", role: "Investor Relations", bio: "12 years in private wealth management. Believes every partner deserves transparent, high-yield results.", initials: "MJ" },
+  { name: "Bablu Singh", role: "Founder", bio: "Built MarketMinds to give select individuals access to high-velocity algorithms and institutional-grade investment strategies.", initials: "BS" },
 ];
 
 const milestones = [
   { year: "2019", event: "Founded in Mumbai. Began testing proprietary high-frequency models." },
-  { year: "2021", event: "Crossed ₹10 Cr AUM. Consistently generated absolute returns in volatile markets." },
-  { year: "2023", event: "Opened our Hyper Growth pool to private partners. 500+ active accounts." },
-  { year: "2025", event: "₹85 Cr+ AUM. Introduced Daily Rewards and Weekly Payout systems." },
+  { year: "2021", event: "First private partners onboarded. Validated algo-driven strategies in live markets." },
+  { year: "2023", event: "Opened our Hyper Growth pool to select partners. Consistent absolute returns delivered." },
+  { year: "2025", event: "₹35L+ AUM. 100+ active partners. Introduced Daily Rewards and Weekly Payout systems." },
 ];
 
 export default function AboutPage() {
@@ -64,10 +61,10 @@ export default function AboutPage() {
             <span className="text-[var(--text)] font-bold"> Our systems are designed to extract value daily, offering unmatched liquidity and growth.</span>&rdquo;
           </p>
           <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-[#C9A227]/10 border border-[#C9A227]/20 flex items-center justify-center text-[#C9A227] text-xs font-bold flex-shrink-0">VM</div>
+            <div className="w-8 h-8 rounded-full bg-[#C9A227]/10 border border-[#C9A227]/20 flex items-center justify-center text-[#C9A227] text-xs font-bold flex-shrink-0">BS</div>
             <div className="text-left">
-              <p className="text-[var(--text)] text-xs font-semibold">Vikram Mehta</p>
-              <p className="text-[10px] uppercase tracking-wider text-[var(--text-3)]">Founder & CEO</p>
+              <p className="text-[var(--text)] text-xs font-semibold">Bablu Singh</p>
+              <p className="text-[10px] uppercase tracking-wider text-[var(--text-3)]">Founder</p>
             </div>
           </div>
         </AnimatedSection>
@@ -77,8 +74,8 @@ export default function AboutPage() {
       <section className="py-12 sm:py-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-10">
           {[
-            { val: "₹85Cr+", label: "Capital Deployed" },
-            { val: "1,200+", label: "Active Partners" },
+            { val: "₹35L+", label: "Capital Deployed" },
+            { val: "100+", label: "Active Partners" },
             { val: "42.5%",   label: "Avg. Annual Returns" },
             { val: "5 Yrs",   label: "In Private Markets" },
           ].map((s, i) => (
@@ -157,10 +154,10 @@ export default function AboutPage() {
           <AnimatedSection>
             <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--text-2)] mb-10 sm:mb-16 text-center">The Team</p>
           </AnimatedSection>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <div className="flex justify-center">
             {team.map((member, i) => (
               <AnimatedSection key={member.name} delay={i * 100} direction="up">
-                <div className="group bg-[var(--surface)] border border-[var(--border)] hover:border-[#C9A227]/20 rounded-[20px] sm:rounded-2xl p-6 sm:p-7 transition-all duration-500 h-full">
+                <div className="group bg-[var(--surface)] border border-[var(--border)] hover:border-[#C9A227]/20 rounded-[20px] sm:rounded-2xl p-6 sm:p-7 transition-all duration-500 w-72 sm:w-80">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#C9A227]/10 border border-[#C9A227]/20 flex items-center justify-center text-[#C9A227] font-bold text-sm mb-4 sm:mb-5">
                     {member.initials}
                   </div>

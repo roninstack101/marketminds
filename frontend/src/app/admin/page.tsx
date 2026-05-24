@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FilterDropdown } from "@/components/FilterDropdown";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
 
 interface User {
   _id: string;
@@ -170,6 +170,15 @@ export default function AdminPage() {
 
   const [gainModal, setGainModal] = useState<Partial<MemberGain> | null>(null);
   const [gainBusy, setGainBusy] = useState(false);
+
+  // add / delete user modals
+  const [addUserOpen, setAddUserOpen] = useState(false);
+  const [addUserForm, setAddUserForm] = useState({ name: "", email: "", phone: "", password: "", role: "user" });
+  const [addUserBusy, setAddUserBusy] = useState(false);
+  const [addUserMsg, setAddUserMsg] = useState("");
+  const [deleteUserTarget, setDeleteUserTarget] = useState<User | null>(null);
+  const [deleteUserReason, setDeleteUserReason] = useState("");
+  const [deleteUserBusy, setDeleteUserBusy] = useState(false);
 
   // search + filter states
   const [userSearch, setUserSearch] = useState("");
@@ -493,6 +502,13 @@ export default function AdminPage() {
                   <h2 className="text-[var(--text)] font-semibold">All Users</h2>
                   <p className="text-[10px] uppercase tracking-widest text-[var(--text-3)] mt-0.5">{users.length} registered</p>
                 </div>
+                <button
+                  onClick={() => { setAddUserOpen(true); setAddUserMsg(""); setAddUserForm({ name: "", email: "", phone: "", password: "", role: "user" }); }}
+                  className="flex items-center gap-2 px-4 py-2 bg-[#C9A227] hover:bg-[#E8C65A] text-black text-xs font-bold uppercase tracking-widest rounded-full transition-all duration-200"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" /></svg>
+                  Add User
+                </button>
               </div>
               <div className="flex items-center gap-3">
                 <input
@@ -535,6 +551,15 @@ export default function AdminPage() {
                             <span className={`px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider ${u.role === "admin" ? "bg-[#C9A227]/10 text-[#C9A227] border border-[#C9A227]/20" : "bg-[var(--border)] text-[var(--text-3)]"}`}>{u.role}</span>
                             {u.referralGroup && (
                               <span className="px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-wider bg-[#6366F1]/10 text-[#6366F1] border border-[#6366F1]/20">{u.referralGroup}</span>
+                            )}
+                            {u.role !== "admin" && (
+                              <button
+                                onClick={() => { setDeleteUserTarget(u); setDeleteUserReason(""); }}
+                                className="p-1.5 rounded-full text-red-400 hover:bg-red-500/10 transition-colors"
+                                title="Delete user"
+                              >
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                              </button>
                             )}
                           </div>
                         </div>
@@ -947,6 +972,106 @@ export default function AdminPage() {
         </main>
 
       </div>
+
+      {/* Add User Modal */}
+      {addUserOpen && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-[var(--surface-deep)] border border-[var(--border)] rounded-2xl w-full max-w-md p-6">
+            <h3 className="text-[var(--text)] font-semibold mb-5">Add User</h3>
+            <div className="space-y-3">
+              {[
+                { label: "Full Name", key: "name", type: "text", placeholder: "John Doe" },
+                { label: "Email", key: "email", type: "email", placeholder: "john@example.com" },
+                { label: "Phone", key: "phone", type: "tel", placeholder: "9876543210" },
+                { label: "Password", key: "password", type: "password", placeholder: "Min 6 characters" },
+              ].map(f => (
+                <div key={f.key}>
+                  <label className="text-[10px] uppercase tracking-widest text-[var(--text-3)] mb-1 block">{f.label}</label>
+                  <input
+                    type={f.type}
+                    placeholder={f.placeholder}
+                    value={(addUserForm as Record<string, string>)[f.key]}
+                    onChange={e => setAddUserForm(p => ({ ...p, [f.key]: e.target.value }))}
+                    className="w-full bg-[var(--input-bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm text-[var(--text)] outline-none focus:border-[#C9A227]/50"
+                  />
+                </div>
+              ))}
+              <div>
+                <label className="text-[10px] uppercase tracking-widest text-[var(--text-3)] mb-1 block">Role</label>
+                <FilterDropdown
+                  value={addUserForm.role}
+                  onChange={v => setAddUserForm(p => ({ ...p, role: v }))}
+                  options={[
+                    { value: "user", label: "User" },
+                    { value: "admin", label: "Admin" },
+                  ]}
+                />
+              </div>
+            </div>
+            {addUserMsg && <p className="text-xs mt-3 text-red-400">{addUserMsg}</p>}
+            <div className="flex gap-3 mt-6">
+              <button onClick={() => setAddUserOpen(false)} className="flex-1 py-2.5 rounded-full border border-[var(--border)] text-xs text-[var(--text-2)] hover:border-[var(--text-3)] transition-colors">Cancel</button>
+              <button
+                disabled={addUserBusy}
+                onClick={async () => {
+                  setAddUserBusy(true); setAddUserMsg("");
+                  try {
+                    const r = await fetch(`${API}/api/admin/users`, { method: "POST", headers: h(), body: JSON.stringify(addUserForm) });
+                    const d = await r.json();
+                    if (d.success) { setAddUserOpen(false); fetchUsers(); }
+                    else setAddUserMsg(d.message || d.errors?.[0]?.msg || "Failed to create user.");
+                  } catch { setAddUserMsg("Network error."); }
+                  finally { setAddUserBusy(false); }
+                }}
+                className="flex-1 py-2.5 rounded-full bg-[#C9A227] hover:bg-[#E8C65A] text-black text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50"
+              >
+                {addUserBusy ? "Creating…" : "Create"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete User Modal */}
+      {deleteUserTarget && (
+        <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+          <div className="bg-[var(--surface-deep)] border border-[var(--border)] rounded-2xl w-full max-w-sm p-6 text-center">
+            <div className="w-12 h-12 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+            </div>
+            <h3 className="text-[var(--text)] font-semibold mb-1">Delete User</h3>
+            <p className="text-[var(--text-3)] text-xs mb-4">Are you sure you want to delete <span className="text-[var(--text)] font-medium">{deleteUserTarget.name}</span>? This cannot be undone.</p>
+            <div className="text-left mb-5">
+              <label className="text-[10px] uppercase tracking-widest text-[var(--text-3)] mb-1.5 block">Reason for deletion</label>
+              <textarea
+                rows={3}
+                placeholder="Enter reason…"
+                value={deleteUserReason}
+                onChange={e => setDeleteUserReason(e.target.value)}
+                className="w-full bg-[var(--input-bg)] border border-[var(--border)] rounded-xl px-4 py-2.5 text-sm text-[var(--text)] outline-none focus:border-[#C9A227]/50 resize-none"
+              />
+            </div>
+            <div className="flex gap-3">
+              <button onClick={() => setDeleteUserTarget(null)} className="flex-1 py-2.5 rounded-full border border-[var(--border)] text-xs text-[var(--text-2)] hover:border-[var(--text-3)] transition-colors">Cancel</button>
+              <button
+                disabled={deleteUserBusy || !deleteUserReason.trim()}
+                onClick={async () => {
+                  setDeleteUserBusy(true);
+                  try {
+                    const r = await fetch(`${API}/api/admin/users/${deleteUserTarget._id}`, { method: "DELETE", headers: h() });
+                    const d = await r.json();
+                    if (d.success) { setDeleteUserTarget(null); setDeleteUserReason(""); fetchUsers(); }
+                  } catch { /* ignore */ }
+                  finally { setDeleteUserBusy(false); }
+                }}
+                className="flex-1 py-2.5 rounded-full bg-red-500 hover:bg-red-400 text-white text-xs font-bold uppercase tracking-widest transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deleteUserBusy ? "Deleting…" : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* KYC Modal */}
       {kycModal && (
