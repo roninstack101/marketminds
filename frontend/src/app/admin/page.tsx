@@ -980,8 +980,8 @@ export default function AdminPage() {
             <h3 className="text-[var(--text)] font-semibold mb-5">Add User</h3>
             <div className="space-y-3">
               {[
-                { label: "Full Name", key: "name", type: "text", placeholder: "John Doe" },
-                { label: "Email", key: "email", type: "email", placeholder: "john@example.com" },
+                { label: "Full Name", key: "name", type: "text", placeholder: "Arjun Sharma" },
+                { label: "Email", key: "email", type: "email", placeholder: "name@email.com" },
                 { label: "Phone", key: "phone", type: "tel", placeholder: "9876543210" },
                 { label: "Password", key: "password", type: "password", placeholder: "Min 6 characters" },
               ].map(f => (
