@@ -251,6 +251,10 @@ export default function RegisterPage() {
   const orbX = useTransform(mouseX, [0, 1], [-18, 18]);
   const orbY = useTransform(mouseY, [0, 1], [-18, 18]);
 
+  useEffect(() => {
+    if (localStorage.getItem("mm_token")) router.replace("/dashboard");
+  }, [router]);
+
   const [step, setStep] = useState<1 | 2>(1);
   const [form, setForm] = useState<FormState>({ name: "", email: "", phone: "", password: "", confirmPassword: "", referralCode: "" });
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});

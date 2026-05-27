@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useMotionValue, useTransform, useMotionTemplate } from "framer-motion";
@@ -98,6 +98,10 @@ export default function LoginPage() {
   const orbY = useTransform(mouseY, [0, 1], [-18, 18]);
   const orbX2 = useTransform(orbX, (v: number) => -v * 0.6);
   const orbY2 = useTransform(orbY, (v: number) => -v * 0.6);
+
+  useEffect(() => {
+    if (localStorage.getItem("mm_token")) router.replace("/dashboard");
+  }, [router]);
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
