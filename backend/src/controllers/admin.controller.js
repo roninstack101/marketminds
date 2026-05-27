@@ -78,7 +78,7 @@ async function addTransaction(req, res) {
 async function getAllUsers(req, res) {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const limit = Math.min(500, Math.max(1, parseInt(req.query.limit) || 500));
     const skip = (page - 1) * limit;
 
     const [users, total] = await Promise.all([
